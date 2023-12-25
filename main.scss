@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: sans-serif;
+    position: relative;
+    transition: all .3s ease;
+}
+.push {
+    position: fixed;
+    right: -120%;
+    top: 2%;
+    width: 350px;
+    padding: 10px;
+    background-color: rgba(0, 128, 0, 0.407);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    transition: all .5s ease;
+    &__img {
+        img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+    &__content {
+        margin-left: 20px;
+        h1 {
+            font-size: 20px;
+        }
+        p {
+            font-size: 12px;
+        }
+    }
+}
+.push__active {
+    right: 2%;
+}
