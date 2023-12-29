@@ -3,48 +3,71 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>push craft.ru.net</title>
+    <title>Уведомления</title>
     <link rel="stylesheet" href="./main.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/favico.js/0.3.10/favico.min.js"></script>
+    <!-- Подключение скрипта -->
+    <script src="script.js"></script>
 </head>
 
 <body>
+    <div id="notifications-container"></div>
 
-    <button id="myButton">тест</button>
     <div class="push">
         <div class="push__img">
             <img src="./icons8-bell-80.png" alt="ico">
         </div>
         <div class="push__content">
             <h1>Новое сообщение</h1>
-            <p>новое сообщение от пользователя: ${user}</p>
+            <p>новое сообщение от пользователя: <span id="notificationUser"></span></p>
         </div>
     </div>
-
     <script>
         $(document).ready(function () {
             var favico = new Favico({
                 animation: 'pop'
             });
-            favico.badge("./icons8-bell-80.png");
-            // Обработчик события нажатия на кнопку
-            $("#myButton").on("click", function () {
-                // Изменение тайтла сайта
-                $("title").text("Новое сообщение! - craft.ru.net");
 
-                // Появление блока
-                $(".push").addClass("push__active")
+            function checkNotifications() {
+                $.ajax({
+                    url: '',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.notifications && data.notifications.length > 0) {
+                            displayNotifications(data.notifications);
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Ошибка при запросе уведомлений:', error);
+                    }
+                });
+            }
 
+            function displayNotifications(notifications) {
+                notifications.forEach(function (notification) {
+                    $('#notifications-container').append('<div class="notification">' + notification.message + '</div>');
 
-                // Воспроизведение звука
-                var audio = new Audio('https://isikdev.github.io/new_message_tone.mp3');
-                audio.play();
-            });
+                    $("title").text("Новое сообщение! - craft.ru.net");
+
+                    $(".push").addClass("push__active");
+
+                    var audio = new Audio('https://isikdev.github.io/new_message_tone.mp3');
+                    audio.play();
+
+                    $("#notificationUser").text(notification.user);
+                });
+
+                favico.badge(notifications.length);
+            }
+
+            setInterval(checkNotifications, 5000);
         });
-    </script>
 
+    </script>
 </body>
 
 </html>
